@@ -393,3 +393,57 @@ body {
     border: none;
   }
 }
+
+/* Footer Styles */
+.app-footer {
+  margin-top: auto;
+  padding: 2rem 1rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.footer-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.bmc-link {
+  background-color: #FFDD00;
+  color: #000000;
+  border: 1px solid #FFDD00;
+}
+
+.github-link {
+  background-color: #24292e;
+  color: #ffffff;
+}
+
+.footer-text {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+@media print {
+  .app-footer {
+    display: none;
+  }
+}

@@ -88,6 +88,29 @@ function App() {
         />
         <Preview state={state} />
       </main>
+      <footer className="app-footer">
+        <div className="footer-links">
+          <a
+            href="https://buymeacoffee.com/thanhnguyxn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link bmc-link"
+          >
+            ☕ Buy Me a Coffee
+          </a>
+          <a
+            href="https://github.com/ThanhNguyxn/payslip-generator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link github-link"
+          >
+            ⭐ Source Code
+          </a>
+        </div>
+        <p className="footer-text">
+          © {new Date().getFullYear()} Payslip Generator. Built with React & Vite.
+        </p>
+      </footer>
     </div>
   )
 }
