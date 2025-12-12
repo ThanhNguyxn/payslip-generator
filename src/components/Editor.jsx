@@ -2,11 +2,41 @@ import React from 'react';
 import InputGroup from './InputGroup';
 import DynamicTable from './DynamicTable';
 
-const Editor = ({ state, onChange, onArrayChange, onAdd, onRemove }) => {
+const Editor = ({ state, onChange, onArrayChange, onAdd, onRemove, companyLogo, onLogoUpload, logoInputRef }) => {
     const { company, bank, employee, meta, earnings, deductions } = state;
 
     return (
         <div className="editor-panel">
+            <h1 className="sidebar-title">💼 Payslip Generator</h1>
+            <p className="sidebar-subtitle">Generate professional payslips and employment documents</p>
+
+            {/* Company Logo Upload */}
+            <section className="editor-section">
+                <h2>Company Logo</h2>
+                <div className="logo-upload-wrapper">
+                    {companyLogo ? (
+                        <img src={companyLogo} alt="Company Logo" className="logo-preview" />
+                    ) : (
+                        <div className="logo-preview" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888', fontSize: '0.7rem' }}>
+                            No Logo
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={logoInputRef}
+                        onChange={onLogoUpload}
+                        style={{ display: 'none' }}
+                    />
+                    <button
+                        className="logo-upload-btn"
+                        onClick={() => logoInputRef && logoInputRef.current && logoInputRef.current.click()}
+                    >
+                        📤 Upload Logo
+                    </button>
+                </div>
+            </section>
+
             <section className="editor-section">
                 <h2>Company Details</h2>
                 <InputGroup label="Company Name" value={company.name} onChange={(val) => onChange('company', 'name', val)} />
@@ -68,6 +98,16 @@ const Editor = ({ state, onChange, onArrayChange, onAdd, onRemove }) => {
                     ]}
                 />
             </section>
+
+            {/* Footer Links */}
+            <div style={{ marginTop: '2rem', textAlign: 'center', padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <a href="https://github.com/ThanhNguyxn/payslip-generator" target="_blank" rel="noopener noreferrer" style={{ color: '#888', fontSize: '0.75rem', textDecoration: 'none', marginRight: '1rem' }}>
+                    ⭐ GitHub
+                </a>
+                <a href="https://buymeacoffee.com/thanhnguyxn" target="_blank" rel="noopener noreferrer" style={{ color: '#888', fontSize: '0.75rem', textDecoration: 'none' }}>
+                    ☕ Buy Me a Coffee
+                </a>
+            </div>
         </div>
     );
 };

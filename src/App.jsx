@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { INITIAL_STATE } from './constants/initialState'
 import { generateRandomData } from './utils/randomData'
 import { exportPayslipToPdf } from './utils/pdfExport'
@@ -8,6 +8,9 @@ import './index.css'
 
 function App() {
   const [state, setState] = useState(INITIAL_STATE)
+  const [docType, setDocType] = useState('payslip') // 'payslip', 'tax', 'employment'
+  const [companyLogo, setCompanyLogo] = useState(null)
+  const logoInputRef = useRef(null)
 
   const handleChange = (section, field, value) => {
     setState(prev => ({
@@ -43,42 +46,64 @@ function App() {
     }))
   }
 
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0]
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        setCompanyLogo(event.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <div className="app-container">
-      <header className="app-header">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1>Payslip Generator</h1>
+      {/* Modern Navigation Bar */}
+      <nav className="nav-bar">
+        <div className="nav-left">
+          <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>
+            💼 Payslip Generator
+          </span>
+        </div>
+
+        <div className="nav-center">
           <button
-            onClick={() => setState(generateRandomData())}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#10b981',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.375rem',
-              cursor: 'pointer',
-              fontWeight: 500,
-              marginRight: '10px'
-            }}
+            className={`tab-btn ${docType === 'payslip' ? 'active' : ''}`}
+            onClick={() => setDocType('payslip')}
           >
-            Fill Random Data
+            Payslip
           </button>
           <button
-            onClick={() => exportPayslipToPdf(state)}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#2563eb',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.375rem',
-              cursor: 'pointer',
-              fontWeight: 500
-            }}
+            className={`tab-btn ${docType === 'tax' ? 'active' : ''}`}
+            onClick={() => setDocType('tax')}
           >
-            Download PDF / Print
+            Tax Form
+          </button>
+          <button
+            className={`tab-btn ${docType === 'employment' ? 'active' : ''}`}
+            onClick={() => setDocType('employment')}
+          >
+            Employment Letter
           </button>
         </div>
-      </header>
+
+        <div className="nav-right">
+          <button
+            className="action-btn primary"
+            onClick={() => setState(generateRandomData())}
+          >
+            🎲 Random Data
+          </button>
+          <button
+            className="action-btn secondary"
+            onClick={() => exportPayslipToPdf(state)}
+          >
+            📥 Download PDF
+          </button>
+        </div>
+      </nav>
+
       <main className="main-content">
         <Editor
           state={state}
@@ -86,40 +111,16 @@ function App() {
           onArrayChange={handleArrayChange}
           onAdd={addArrayItem}
           onRemove={removeArrayItem}
+          companyLogo={companyLogo}
+          onLogoUpload={handleLogoUpload}
+          logoInputRef={logoInputRef}
         />
-        <Preview state={state} />
+        <Preview
+          state={state}
+          docType={docType}
+          companyLogo={companyLogo}
+        />
       </main>
-      <footer className="app-footer">
-        <div className="footer-links">
-          <a
-            href="https://thanhnguyxn.github.io/student-card-generator/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link student-link"
-          >
-            🎓 Student ID Generator
-          </a>
-          <a
-            href="https://buymeacoffee.com/thanhnguyxn"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link bmc-link"
-          >
-            ☕ Buy Me a Coffee
-          </a>
-          <a
-            href="https://github.com/ThanhNguyxn/payslip-generator"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link github-link"
-          >
-            ⭐ Source Code
-          </a>
-        </div>
-        <p className="footer-text">
-          © {new Date().getFullYear()} Payslip Generator. Built with React & Vite.
-        </p>
-      </footer>
     </div>
   )
 }
