@@ -113,6 +113,12 @@ function App() {
           >
             Offer Letter
           </button>
+          <button
+            className={`tab-btn ${docType === 'faculty' ? 'active' : ''}`}
+            onClick={() => setDocType('faculty')}
+          >
+            Faculty Listing
+          </button>
         </div>
 
         <div className="nav-right">
