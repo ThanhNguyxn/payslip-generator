@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { INITIAL_STATE } from './constants/initialState'
 import { generateRandomData } from './utils/randomData'
-import { exportPayslipToPdf, exportToPng, exportToZip } from './utils/pdfExport'
+import { exportPayslipToPdf, exportToPng, exportToZip, exportTeacherCardToPdf, getTeacherCardPdfBase64 } from './utils/pdfExport'
 import Editor from './components/Editor'
 import Preview from './components/Preview'
 import './index.css'
@@ -10,8 +10,37 @@ function App() {
   const [state, setState] = useState(INITIAL_STATE)
   const [docType, setDocType] = useState('payslip') // 'payslip', 'tax', 'employment'
   const [mode, setMode] = useState('employee') // 'employee' or 'contractor'
+  const [cardStyle, setCardStyle] = useState('original') // 'original', 'modern', 'simple'
   const [companyLogo, setCompanyLogo] = useState(null)
+  const [photoBase64, setPhotoBase64] = useState(null)
   const logoInputRef = useRef(null)
+
+  // Cloudflare Worker URL for photo proxying
+  const WORKER_URL = 'https://student-id-photo-proxy.thanhnguyxn.workers.dev';
+
+  const fetchPhoto = async (gender = 'male') => {
+    try {
+      const response = await fetch(`${WORKER_URL}?gender=${gender}`);
+      if (!response.ok) throw new Error('Photo fetch failed');
+
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoBase64(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error('Failed to fetch photo:', error);
+      // Fallback to Dicebear if worker fails
+      const seed = Math.random().toString(36).substring(7);
+      setPhotoBase64(`https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`);
+    }
+  };
+
+  // Fetch initial photo
+  useEffect(() => {
+    fetchPhoto();
+  }, []);
 
   const handleChange = (section, field, value) => {
     setState(prev => ({
@@ -57,6 +86,11 @@ function App() {
       reader.readAsDataURL(file)
     }
   }
+
+  // Expose PDF generation to window for Puppeteer
+  useEffect(() => {
+    window.getTeacherCardPdfBase64 = () => getTeacherCardPdfBase64(state);
+  }, [state]);
 
   return (
     <div className="app-container">
@@ -125,18 +159,43 @@ function App() {
           >
             Teacher ID
           </button>
+
+          {/* Style Selector */}
+          {(docType === 'teacherCard') && (
+            <select
+              value={cardStyle}
+              onChange={(e) => setCardStyle(e.target.value)}
+              style={{
+                marginLeft: '1rem',
+                padding: '8px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: 'rgba(255,255,255,0.2)',
+                color: 'white',
+                fontSize: '0.9rem',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="original" style={{ color: '#333' }}>🎨 Original</option>
+              <option value="modern" style={{ color: '#333' }}>✨ Modern</option>
+              <option value="simple" style={{ color: '#333' }}>📄 Simple</option>
+            </select>
+          )}
         </div>
 
         <div className="nav-right">
           <button
             className="action-btn primary"
-            onClick={() => setState(generateRandomData())}
+            onClick={() => {
+              setState(generateRandomData());
+              fetchPhoto(Math.random() > 0.5 ? 'male' : 'female');
+            }}
           >
             🎲 Random
           </button>
           <button
             className="action-btn secondary"
-            onClick={() => exportPayslipToPdf(state)}
+            onClick={() => docType === 'teacherCard' ? exportTeacherCardToPdf(state) : exportPayslipToPdf(state)}
             title="Download current document as PDF"
           >
             📄 PDF
@@ -184,6 +243,8 @@ function App() {
           docType={docType}
           mode={mode}
           companyLogo={companyLogo}
+          cardStyle={cardStyle}
+          photoBase64={photoBase64}
         />
       </main>
     </div>

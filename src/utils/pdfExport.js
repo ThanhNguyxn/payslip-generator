@@ -93,6 +93,102 @@ export async function exportPayslipToPdf(state) {
 }
 
 /**
+ * Create Teacher ID card PDF object
+ * @returns {Promise<jsPDF>} - jsPDF object
+ */
+async function createTeacherCardPdf() {
+    const frontCard = document.getElementById('teacher-card-front');
+    const backCard = document.getElementById('teacher-card-back');
+
+    if (!frontCard) {
+        throw new Error('Teacher ID card not found!');
+    }
+
+    // Create PDF - landscape for ID card format
+    const pdf = new jsPDF('landscape', 'mm', 'a4');
+    const pageWidth = 297; // A4 landscape width
+    const pageHeight = 210; // A4 landscape height
+    const margin = 15;
+
+    // Capture front card
+    const frontCanvas = await html2canvas(frontCard, {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        scale: 2,
+    });
+
+    const imgWidth = pageWidth - (margin * 2);
+    const imgHeight = (frontCanvas.height * imgWidth) / frontCanvas.width;
+    const yPos = (pageHeight - imgHeight) / 2;
+
+    pdf.addImage(
+        frontCanvas.toDataURL('image/png'),
+        'PNG',
+        margin,
+        yPos,
+        imgWidth,
+        imgHeight
+    );
+
+    // Add back card on second page if it exists
+    if (backCard) {
+        pdf.addPage();
+        const backCanvas = await html2canvas(backCard, {
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            scale: 2,
+        });
+
+        const backImgHeight = (backCanvas.height * imgWidth) / backCanvas.width;
+        const backYPos = (pageHeight - backImgHeight) / 2;
+
+        pdf.addImage(
+            backCanvas.toDataURL('image/png'),
+            'PNG',
+            margin,
+            backYPos,
+            imgWidth,
+            backImgHeight
+        );
+    }
+
+    return pdf;
+}
+
+/**
+ * Export Teacher ID card (front and back) to PDF
+ * @param {object} state - Application state
+ */
+export async function exportTeacherCardToPdf(state) {
+    try {
+        const pdf = await createTeacherCardPdf(state);
+        // Save with filename
+        const employeeName = state.employee?.name?.replace(/[^a-zA-Z0-9]/g, '_') || 'Employee';
+        pdf.save(`TeacherID_${employeeName}.pdf`);
+    } catch (error) {
+        console.error('Teacher ID PDF export failed:', error);
+        alert('Failed to export Teacher ID PDF. Please try again.');
+    }
+}
+
+/**
+ * Get Teacher ID card PDF as Base64 string
+ * @param {object} state - Application state
+ * @returns {Promise<string>} - Base64 string of PDF
+ */
+export async function getTeacherCardPdfBase64(state) {
+    try {
+        const pdf = await createTeacherCardPdf(state);
+        return pdf.output('datauristring');
+    } catch (error) {
+        console.error('Failed to generate PDF base64:', error);
+        throw error;
+    }
+}
+
+/**
  * Export the current document to PNG
  * @param {object} state - Application state
  * @param {string} docType - Document type name
