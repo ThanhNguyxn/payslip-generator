@@ -495,6 +495,125 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
         </>
     );
 
+    // Teacher ID Card (Penn State Style)
+    const renderTeacherCard = () => {
+        // Generate deterministic photo based on employee name (stable across re-renders)
+        const nameHash = employee.name?.split('').reduce((a, b) => a + b.charCodeAt(0), 0) || 1;
+        const gender = nameHash % 2 === 0 ? 'men' : 'women';
+        const randomId = (nameHash % 99) + 1;
+        const photoUrl = `https://randomuser.me/api/portraits/${gender}/${randomId}.jpg`;
+
+        // Generate dates
+        const issueDate = new Date();
+        const expiryDate = new Date();
+        expiryDate.setFullYear(expiryDate.getFullYear() + 4);
+
+        return (
+            <>
+                <div style={{
+                    width: '350px',
+                    background: 'linear-gradient(135deg, #003366 0%, #005288 100%)',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+                    fontFamily: 'Arial, sans-serif'
+                }}>
+                    {/* Header */}
+                    <div style={{
+                        background: '#fff',
+                        padding: '12px 16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px'
+                    }}>
+                        <div style={{
+                            width: '40px',
+                            height: '40px',
+                            background: '#003366',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem'
+                        }}>PSU</div>
+                        <div>
+                            <div style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Penn State</div>
+                            <div style={{ fontSize: '0.7rem', color: '#666' }}>Pennsylvania State University-Main Campus</div>
+                        </div>
+                    </div>
+
+                    {/* Body */}
+                    <div style={{ padding: '20px', display: 'flex', gap: '16px' }}>
+                        {/* Photo */}
+                        <div style={{
+                            width: '100px',
+                            height: '120px',
+                            background: '#ccc',
+                            borderRadius: '6px',
+                            overflow: 'hidden',
+                            border: '2px solid #fff'
+                        }}>
+                            <img
+                                src={photoUrl}
+                                alt="Faculty"
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => { e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${employee.name}`; }}
+                            />
+                        </div>
+
+                        {/* Info */}
+                        <div style={{ flex: 1, color: '#fff', fontSize: '0.8rem' }}>
+                            <div style={{ marginBottom: '6px' }}>
+                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>FULL NAME:</div>
+                                <div style={{ fontWeight: 'bold' }}>{employee.name}</div>
+                            </div>
+                            <div style={{ marginBottom: '6px' }}>
+                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>EMPLOYEE ID:</div>
+                                <div style={{ color: '#4fc3f7' }}>{employee.employeeId}</div>
+                            </div>
+                            <div style={{ marginBottom: '6px' }}>
+                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>DEPARTMENT:</div>
+                                <div>{employee.position}</div>
+                            </div>
+                            <div style={{ marginBottom: '6px' }}>
+                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>ISSUED:</div>
+                                <div>{issueDate.toLocaleDateString('en-US')}</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>VALID THRU:</div>
+                                <div>{expiryDate.toLocaleDateString('en-US')}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div style={{
+                        background: '#002244',
+                        padding: '10px 16px',
+                        color: '#fff',
+                        fontSize: '0.7rem'
+                    }}>
+                        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>CARDHOLDER ADDRESS</div>
+                        <div style={{ color: '#4fc3f7' }}>{employee.name}</div>
+                        <div style={{ opacity: 0.7 }}>University Park, PA 16802, USA</div>
+                    </div>
+
+                    {/* Disclaimer */}
+                    <div style={{
+                        background: '#001a33',
+                        padding: '8px 16px',
+                        fontSize: '0.55rem',
+                        color: '#888'
+                    }}>
+                        This card is the property of Pennsylvania State University-Main Campus and must be returned upon request. Faculty members must present this card for access to university facilities.
+                    </div>
+                </div>
+            </>
+        );
+    };
+
     return (
         <div
             className="preview-panel"
@@ -523,6 +642,7 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
                 {docType === 'employment' && renderEmploymentLetter()}
                 {docType === 'offer' && renderOfferLetter()}
                 {docType === 'faculty' && renderFacultyListing()}
+                {docType === 'teacherCard' && renderTeacherCard()}
             </div>
         </div>
     );

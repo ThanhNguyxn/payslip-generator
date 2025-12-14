@@ -119,6 +119,12 @@ function App() {
           >
             Faculty Listing
           </button>
+          <button
+            className={`tab-btn ${docType === 'teacherCard' ? 'active' : ''}`}
+            onClick={() => setDocType('teacherCard')}
+          >
+            Teacher ID
+          </button>
         </div>
 
         <div className="nav-right">
