@@ -495,7 +495,7 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
         </>
     );
 
-    // Teacher ID Card (Penn State Style)
+    // Teacher ID Card (2-sided like Student Card)
     const renderTeacherCard = () => {
         // Generate deterministic photo based on employee name (stable across re-renders)
         const nameHash = employee.name?.split('').reduce((a, b) => a + b.charCodeAt(0), 0) || 1;
@@ -508,9 +508,14 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
         const expiryDate = new Date();
         expiryDate.setFullYear(expiryDate.getFullYear() + 4);
 
+        // Use company name as university name
+        const universityName = company.name || 'Pennsylvania State University';
+        const universityShort = universityName.split(' ').map(w => w[0]).join('').substring(0, 3).toUpperCase();
+
         return (
-            <>
-                <div style={{
+            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                {/* FRONT SIDE */}
+                <div id="teacher-card-front" style={{
                     width: '350px',
                     background: 'linear-gradient(135deg, #003366 0%, #005288 100%)',
                     borderRadius: '12px',
@@ -536,20 +541,20 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
                             justifyContent: 'center',
                             color: '#fff',
                             fontWeight: 'bold',
-                            fontSize: '0.9rem'
-                        }}>PSU</div>
+                            fontSize: '0.8rem'
+                        }}>{universityShort}</div>
                         <div>
-                            <div style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>Penn State</div>
-                            <div style={{ fontSize: '0.7rem', color: '#666' }}>Pennsylvania State University-Main Campus</div>
+                            <div style={{ fontWeight: 'bold', color: '#003366', fontSize: '1.1rem' }}>{universityName.split('-')[0] || universityName}</div>
+                            <div style={{ fontSize: '0.65rem', color: '#666' }}>{universityName}</div>
                         </div>
                     </div>
 
                     {/* Body */}
-                    <div style={{ padding: '20px', display: 'flex', gap: '16px' }}>
+                    <div style={{ padding: '16px 20px', display: 'flex', gap: '16px' }}>
                         {/* Photo */}
                         <div style={{
-                            width: '100px',
-                            height: '120px',
+                            width: '90px',
+                            height: '110px',
                             background: '#ccc',
                             borderRadius: '6px',
                             overflow: 'hidden',
@@ -564,26 +569,28 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
                         </div>
 
                         {/* Info */}
-                        <div style={{ flex: 1, color: '#fff', fontSize: '0.8rem' }}>
-                            <div style={{ marginBottom: '6px' }}>
-                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>FULL NAME:</div>
+                        <div style={{ flex: 1, color: '#fff', fontSize: '0.75rem' }}>
+                            <div style={{ marginBottom: '5px' }}>
+                                <div style={{ fontSize: '0.6rem', opacity: 0.7 }}>FULL NAME:</div>
                                 <div style={{ fontWeight: 'bold' }}>{employee.name}</div>
                             </div>
-                            <div style={{ marginBottom: '6px' }}>
-                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>EMPLOYEE ID:</div>
+                            <div style={{ marginBottom: '5px' }}>
+                                <div style={{ fontSize: '0.6rem', opacity: 0.7 }}>EMPLOYEE ID:</div>
                                 <div style={{ color: '#4fc3f7' }}>{employee.employeeId}</div>
                             </div>
-                            <div style={{ marginBottom: '6px' }}>
-                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>DEPARTMENT:</div>
+                            <div style={{ marginBottom: '5px' }}>
+                                <div style={{ fontSize: '0.6rem', opacity: 0.7 }}>DEPARTMENT:</div>
                                 <div>{employee.position}</div>
                             </div>
-                            <div style={{ marginBottom: '6px' }}>
-                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>ISSUED:</div>
-                                <div>{issueDate.toLocaleDateString('en-US')}</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>VALID THRU:</div>
-                                <div>{expiryDate.toLocaleDateString('en-US')}</div>
+                            <div style={{ display: 'flex', gap: '20px' }}>
+                                <div>
+                                    <div style={{ fontSize: '0.6rem', opacity: 0.7 }}>ISSUED:</div>
+                                    <div>{issueDate.toLocaleDateString('en-US')}</div>
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: '0.6rem', opacity: 0.7 }}>VALID THRU:</div>
+                                    <div>{expiryDate.toLocaleDateString('en-US')}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -591,26 +598,86 @@ const Preview = ({ state, docType = 'payslip', mode = 'employee', companyLogo })
                     {/* Footer */}
                     <div style={{
                         background: '#002244',
-                        padding: '10px 16px',
+                        padding: '8px 16px',
                         color: '#fff',
-                        fontSize: '0.7rem'
+                        fontSize: '0.65rem'
                     }}>
-                        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>CARDHOLDER ADDRESS</div>
+                        <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>CARDHOLDER ADDRESS</div>
                         <div style={{ color: '#4fc3f7' }}>{employee.name}</div>
-                        <div style={{ opacity: 0.7 }}>University Park, PA 16802, USA</div>
+                        <div style={{ opacity: 0.7 }}>{company.address || 'University Park, PA 16802, USA'}</div>
+                    </div>
+                </div>
+
+                {/* BACK SIDE */}
+                <div id="teacher-card-back" style={{
+                    width: '350px',
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+                    fontFamily: 'Arial, sans-serif',
+                    padding: '16px'
+                }}>
+                    {/* Barcode simulation */}
+                    <div style={{
+                        background: '#fff',
+                        height: '50px',
+                        borderRadius: '4px',
+                        marginBottom: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'monospace',
+                        fontSize: '0.8rem',
+                        letterSpacing: '2px'
+                    }}>
+                        ||| {employee.employeeId} |||
+                    </div>
+
+                    {/* Contact Info */}
+                    <div style={{ color: '#fff', fontSize: '0.7rem', marginBottom: '12px' }}>
+                        <div style={{ marginBottom: '6px' }}>
+                            <span style={{ opacity: 0.7 }}>Email: </span>
+                            <span style={{ color: '#4fc3f7' }}>{employee.name?.toLowerCase().replace(' ', '.')}@{company.name?.toLowerCase().replace(/[^a-z0-9]/g, '')}.edu</span>
+                        </div>
+                        <div style={{ marginBottom: '6px' }}>
+                            <span style={{ opacity: 0.7 }}>Phone: </span>
+                            <span>{company.phone}</span>
+                        </div>
+                        <div>
+                            <span style={{ opacity: 0.7 }}>Office: </span>
+                            <span>Room {100 + (nameHash % 200)}, Main Building</span>
+                        </div>
+                    </div>
+
+                    {/* Small photo */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div style={{
+                            width: '40px',
+                            height: '50px',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            border: '1px solid #4fc3f7'
+                        }}>
+                            <img src={photoUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                        <div style={{ color: '#fff', fontSize: '0.65rem' }}>
+                            <div style={{ fontWeight: 'bold' }}>{employee.name}</div>
+                            <div style={{ opacity: 0.7 }}>{employee.position}</div>
+                        </div>
                     </div>
 
                     {/* Disclaimer */}
                     <div style={{
-                        background: '#001a33',
-                        padding: '8px 16px',
                         fontSize: '0.55rem',
-                        color: '#888'
+                        color: '#888',
+                        borderTop: '1px solid #333',
+                        paddingTop: '8px'
                     }}>
-                        This card is the property of Pennsylvania State University-Main Campus and must be returned upon request. Faculty members must present this card for access to university facilities.
+                        This card is the property of {universityName} and must be returned upon request. Faculty members must present this card for access to university facilities. If found, please return to the HR office.
                     </div>
                 </div>
-            </>
+            </div>
         );
     };
 
