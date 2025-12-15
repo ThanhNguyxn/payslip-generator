@@ -127,6 +127,96 @@ export const UNIVERSITIES = [
         color: "#4E2A84",
         address: "Evanston, IL 60208, USA",
         departments: ["Journalism", "Business", "Engineering", "Law", "Medicine"]
+    },
+    {
+        name: "University of Michigan",
+        shortName: "Michigan",
+        domain: "umich.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/michigan.png",
+        color: "#00274C",
+        address: "500 S State St, Ann Arbor, MI 48109, USA",
+        departments: ["Engineering", "Business", "Medicine", "Law", "Psychology"]
+    },
+    {
+        name: "University of Texas at Austin",
+        shortName: "UT Austin",
+        domain: "utexas.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/ut_austin.png",
+        color: "#BF5700",
+        address: "Austin, TX 78712, USA",
+        departments: ["Business", "Engineering", "Communications", "Biology", "Computer Science"]
+    },
+    {
+        name: "University of Washington",
+        shortName: "UW",
+        domain: "washington.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/washington.png",
+        color: "#4B2E83",
+        address: "Seattle, WA 98195, USA",
+        departments: ["Computer Science", "Medicine", "Business", "Engineering", "Biology"]
+    },
+    {
+        name: "University of Florida",
+        shortName: "UF",
+        domain: "ufl.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/florida.png",
+        color: "#FA4616",
+        address: "Gainesville, FL 32611, USA",
+        departments: ["Engineering", "Business", "Biology", "Psychology", "Health Sciences"]
+    },
+    {
+        name: "Ohio State University",
+        shortName: "Ohio State",
+        domain: "osu.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/ohio_state.png",
+        color: "#BB0000",
+        address: "Columbus, OH 43210, USA",
+        departments: ["Business", "Engineering", "Psychology", "Biology", "Finance"]
+    },
+    {
+        name: "University of Pennsylvania",
+        shortName: "UPenn",
+        domain: "upenn.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/upenn.png",
+        color: "#990000",
+        address: "Philadelphia, PA 19104, USA",
+        departments: ["Business", "Medicine", "Law", "Economics", "Nursing"]
+    },
+    {
+        name: "Brown University",
+        shortName: "Brown",
+        domain: "brown.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/brown.png",
+        color: "#4E3629",
+        address: "Providence, RI 02912, USA",
+        departments: ["Computer Science", "Economics", "Biology", "History", "Applied Mathematics"]
+    },
+    {
+        name: "Johns Hopkins University",
+        shortName: "JHU",
+        domain: "jhu.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/johns_hopkins.png",
+        color: "#002D72",
+        address: "Baltimore, MD 21218, USA",
+        departments: ["Medicine", "Public Health", "International Studies", "Bioengineering", "Neuroscience"]
+    },
+    {
+        name: "University of Southern California",
+        shortName: "USC",
+        domain: "usc.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/usc.png",
+        color: "#990000",
+        address: "Los Angeles, CA 90007, USA",
+        departments: ["Film", "Business", "Communication", "Engineering", "Architecture"]
+    },
+    {
+        name: "Carnegie Mellon University",
+        shortName: "CMU",
+        domain: "cmu.edu",
+        logo: "https://thanhnguyxn.github.io/student-card-generator/img/logos/cmu.png",
+        color: "#C41230",
+        address: "Pittsburgh, PA 15213, USA",
+        departments: ["Computer Science", "Robotics", "Drama", "Engineering", "Design"]
     }
 ];
 
