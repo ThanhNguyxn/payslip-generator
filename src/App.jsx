@@ -16,7 +16,7 @@ function App() {
   const logoInputRef = useRef(null)
 
   // Cloudflare Worker URL for photo proxying
-  const WORKER_URL = 'https://student-id-photo-proxy.thanhnguyxn.workers.dev';
+  const WORKER_URL = 'https://student-photo-proxy.thanhnguyentuan2007.workers.dev';
 
   const fetchPhoto = async (gender = 'male') => {
     try {
